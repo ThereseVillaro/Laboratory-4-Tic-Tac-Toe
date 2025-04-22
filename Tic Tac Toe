@@ -1,0 +1,143 @@
+//Tic Tac Toe is fun!//
+
+import java.awt.*;
+import java.awt.event.*;
+
+public class TicTacToe extends Frame implements ActionListener {
+    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 40);
+    private static final Font STATUS_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Color BUTTON_COLOR = Color.WHITE;
+    private static final Color GRID_COLOR = Color.DARK_GRAY;
+    private static final Color PANEL_COLOR = Color.LIGHT_GRAY;
+
+    private Button[][] buttons = new Button[3][3];
+    private boolean isXTurn = true; 
+    private Label statusLabel = new Label("Player X's turn", Label.CENTER);
+    private Button newGameButton = new Button("New Game");
+
+    public TicTacToe() {
+        setTitle("Tic Tac Toe");
+        setSize(400, 450);
+        setLayout(new BorderLayout());
+        setBackground(PANEL_COLOR);
+
+        Panel gridPanel = createGridPanel();
+        add(gridPanel, BorderLayout.CENTER);
+
+    
+        Panel bottomPanel = createBottomPanel();
+        add(bottomPanel, BorderLayout.SOUTH);
+
+       
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+
+        setVisible(true);
+    }
+
+    private Panel createGridPanel() {
+        Panel gridPanel = new Panel(new GridLayout(3, 3, 5, 5));
+        gridPanel.setBackground(GRID_COLOR);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                buttons[i][j] = new Button("");
+                buttons[i][j].setFont(BUTTON_FONT);
+                buttons[i][j].setBackground(BUTTON_COLOR);
+                buttons[i][j].addActionListener(this);
+                gridPanel.add(buttons[i][j]);
+            }
+        }
+        return gridPanel;
+    }
+
+    private Panel createBottomPanel() {
+        Panel bottomPanel = new Panel(new BorderLayout());
+        bottomPanel.setBackground(PANEL_COLOR);
+        statusLabel.setFont(STATUS_FONT);
+        bottomPanel.add(statusLabel, BorderLayout.CENTER);
+        newGameButton.setFont(new Font("Arial", Font.BOLD, 14));
+        newGameButton.setBackground(Color.CYAN);
+        newGameButton.addActionListener(e -> resetGame());
+        bottomPanel.add(newGameButton, BorderLayout.EAST);
+        return bottomPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Button clickedButton = (Button) e.getSource();
+
+        if (!clickedButton.getLabel().isEmpty()) return;
+        clickedButton.setLabel(isXTurn ? "X" : "O");
+
+        if (checkWinner()) {
+            statusLabel.setText("Player " + (isXTurn ? "X" : "O") + " wins!");
+            disableButtons();
+        } else if (isDraw()) {
+            statusLabel.setText("It's a draw!");
+        } else {
+            isXTurn = !isXTurn;
+            statusLabel.setText("Player " + (isXTurn ? "X" : "O") + "'s turn");
+        }
+    }
+
+    private boolean checkWinner() {
+        return checkLines() || checkDiagonals();
+    }
+
+    private boolean checkLines() {
+        for (int i = 0; i < 3; i++) {
+            if (isLineEqual(buttons[i][0], buttons[i][1], buttons[i][2]) || 
+                isLineEqual(buttons[0][i], buttons[1][i], buttons[2][i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkDiagonals() {
+        return isLineEqual(buttons[0][0], buttons[1][1], buttons[2][2]) ||
+               isLineEqual(buttons[0][2], buttons[1][1], buttons[2][0]);
+    }
+
+    private boolean isLineEqual(Button b1, Button b2, Button b3) {
+        String label1 = b1.getLabel(), label2 = b2.getLabel(), label3 = b3.getLabel();
+        return !label1.isEmpty() && label1.equals(label2) && label2.equals(label3);
+    }
+
+    private boolean isDraw() {
+        for (Button[] row : buttons) {
+            for (Button button : row) {
+                if (button.getLabel().isEmpty()) return false;
+            }
+        }
+        return true;
+    }
+
+    private void disableButtons() {
+        for (Button[] row : buttons) {
+            for (Button button : row) {
+                button.setEnabled(false);
+            }
+        }
+    }
+
+    private void resetGame() {
+        for (Button[] row : buttons) {
+            for (Button button : row) {
+                button.setLabel("");
+                button.setEnabled(true);
+                button.setBackground(BUTTON_COLOR);
+            }
+        }
+        isXTurn = true;
+        statusLabel.setText("Player X's turn");
+    }
+
+    public static void main(String[] args) {
+        new TicTacToe();
+    }
+}
