@@ -15,5 +15,5 @@ But if all buttons are filled and no player has three marks in a row, the game e
 
 To start a new game, click the "New Game" button.
 
-![Screenshot (66)](https://github.com/user-attachments/assets/4ae724df-07ef-465a-bc2a-8e2725a181c4)
-![Screenshot (68)](https://github.com/user-attachments/assets/c5ca1dab-c434-4f5c-9082-004df50408c6)
+![Screenshot (68)](https://github.com/user-attachments/assets/e408f8ba-bd66-4675-8129-d4a870131d5b)
+![Screenshot (69)](https://github.com/user-attachments/assets/af62158f-4e3b-4e2f-a030-bbae422c9a6b)
